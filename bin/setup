@@ -19,3 +19,5 @@ cp -r ${OPENSHIFT_WILDFLY_DIR}versions/${version}/* ${OPENSHIFT_WILDFLY_DIR}/
 
 mkdir -p $OPENSHIFT_WILDFLY_DIR/jboss_cfg_backup
 cp -n ${OPENSHIFT_WILDFLY_DIR}/versions/${version}/standalone/configuration/standalone.xml $OPENSHIFT_WILDFLY_DIR/jboss_cfg_backup/standalone.xml
+
+psql -c 'CREATE SCHEMA keycloak'
