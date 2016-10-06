@@ -53,6 +53,8 @@ Provides:
   - wildfly-10
   - "wildfly"
   - wildfly-standalone
+Requires:
+  - postgresql
 Publishes:
   publish-http-url:
     Type: "NET_TCP:httpd-proxy-info"
