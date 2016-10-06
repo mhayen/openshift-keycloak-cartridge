@@ -593,6 +593,7 @@
                         <property name="initializeEmpty" value="true"/>
                         <property name="migrationStrategy" value="update"/>
                         <property name="migrationExport" value="${jboss.home.dir}/keycloak-database-update.sql"/>
+                        <property name="schema" value="keycloak"/>
                     </properties>
                 </provider>
             </spi>
