@@ -3,3 +3,5 @@
 #if [ -e $OPENSHIFT_WILDFLY_DIR/standalone/deployments/ROOT.war ]; then
 #    cp $OPENSHIFT_WILDFLY_DIR/standalone/deployments/ROOT.war $OPENSHIFT_REPO_DIR/deployments
 #fi
+
+psql -c 'CREATE SCHEMA keycloak'
