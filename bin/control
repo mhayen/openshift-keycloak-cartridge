@@ -192,6 +192,34 @@ function ismgmtup() {
     return 1
 }
 
+# Check if the server mgmt port is up
+function ismgmtorhttpup() {
+    let count=0
+    while [ ${count} -lt 64 ]
+    do
+        if echo 2> /dev/null > "/dev/tcp/${OPENSHIFT_WILDFLY_IP}/${OPENSHIFT_WILDFLY_MANAGEMENT_HTTP_PORT}"; then
+            echo "Found ${OPENSHIFT_WILDFLY_IP}:${OPENSHIFT_WILDFLY_MANAGEMENT_HTTP_PORT} listening port"
+            return 0
+        fi
+        if echo 2> /dev/null > "/dev/tcp/${OPENSHIFT_WILDFLY_IP}/${OPENSHIFT_WILDFLY_HTTP_PORT}"; then
+            echo "Found ${OPENSHIFT_WILDFLY_IP}:${OPENSHIFT_WILDFLY_HTTP_PORT} listening port"
+            return 0
+        fi
+        # if the process failed to start, error out immediately
+        # rather than waiting for the timeout on the port being available.
+        wpid=$(cat $WILDFLY_PID_FILE);
+        if ! ps | grep -v grep | grep $wpid > /dev/null; then
+          return 2
+        fi
+        let count=${count}+1
+
+        sleep 2
+    done
+
+    return 1
+}
+
+
 function build() {
   CONFIG_DIR="${OPENSHIFT_WILDFLY_DIR}/standalone/configuration"
   OPENSHIFT_MAVEN_MIRROR="${CONFIG_DIR}/settings.base.xml"
@@ -293,7 +321,7 @@ function start() {
     echo "$PROCESS_ID" > ${WILDFLY_PID_FILE}
 
     rc=0
-    ishttpup || rc=$?
+    ismgmtorhttpup || rc=$?
     if [ $rc -eq 1 ]; then
       echo "Timed out waiting for http listening port for $cartridge_type process"
       exit 1
